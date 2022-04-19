@@ -1,0 +1,19 @@
+# Django
+Django==4.0.2
+django-model-utils==4.1.1
+
+# Django Rest
+djangorestframework==3.13.1
+drf-yasg==1.20.0
+django-cors-headers==3.11.0
+
+# Python
+psycopg2==2.8.6
+requests==2.25.1
+ipython==7.16.1
+python-decouple==3.4
+Pillow==9.1.0
+pytz==2022.1
+
+# Deploy
+gunicorn==20.0.4

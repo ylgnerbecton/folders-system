@@ -1,0 +1,57 @@
+version: "3"
+
+services:
+  database:
+    image: postgres
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - ./pg-container/pg_init.sh:/docker-entrypoint-initdb.d/pg_init.sh
+    ports:
+      - 5432:5432
+    expose:
+      - 5432
+    networks:
+      - database_network
+
+  application:
+    build:
+      context: clicksign-backend
+    env_file: .env
+    environment:
+      - PYTHONUNBUFFERED=0
+    volumes:
+      - .:/app
+      - sha_home:/root
+      - sha_static:/app/static
+      - sha_media:/app/media
+    networks:
+      - webserver_network
+      - database_network
+    depends_on:
+      - database
+
+  webserver:
+    image: nginx
+    ports:
+      - 8000:80
+    volumes:
+      - "./config/nginx/conf.d:/etc/nginx/conf.d"
+      - sha_static:/app/static
+      - sha_media:/app/media
+    networks:
+      - webserver_network
+    depends_on:
+      - application
+
+networks:
+  webserver_network:
+    driver: bridge
+  database_network:
+    driver: bridge
+
+volumes:
+  sha_home:
+  sha_db:
+  sha_static:
+  sha_media:
